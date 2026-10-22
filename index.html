@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base target="_top">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--black: #000000;
+--surface-1: #0A0A0A;
+--surface-2: #111111;
+--surface-3: #1A1A1A;
+--border: #2A2A2A;
+--red: #EA1515;
+--red-dim: rgba(234,21,21,0.12);
+--white: #FFFFFF;
+--muted: #666666;
+--muted-2: #444444;
+--green: #22C55E;
+--amber: #F59E0B;
+--font-ui: 'Space Grotesk', system-ui, sans-serif;
+--font-mono: 'JetBrains Mono', monospace;
+--sidebar-w: 240px;
+}
+
+* { box-sizing: border-box; }
+html, body {
+margin: 0;
+width: 100%;
+height: 100%;
+background: var(--black);
+color: var(--white);
+font-family: var(--font-ui);
+overflow: hidden;
+}
+
+body.light {
+--black: #F5F5F5;
+--surface-1: #FFFFFF;
+--surface-2: #F0F0F0;
+--surface-3: #E8E8E8;
+--border: #DEDEDE;
+--white: #111111;
+--muted: #666666;
+--muted-2: #888888;
+--red-dim: rgba(234,21,21,0.08);
+}
+
+.watermark {
+position: fixed;
+bottom: 14px;
+right: 18px;
+z-index: 999;
+font-size: 10px;
+color: var(--muted-2);
+letter-spacing: 0.14em;
+font-family: var(--font-mono);
+pointer-events: none;
+}
+
+#login-screen {
+position: fixed;
+inset: 0;
+display: flex;
+background: var(--black);
+z-index: 1000;
+}
+
+.login-brand {
+flex: 1.1;
+position: relative;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+padding: 52px 60px;
+border-right: 1px solid var(--border);
+background: var(--black);
+overflow: hidden;
+}
+
+.login-brand::before {
+content: "";
+position: absolute;
+inset: 0;
+background-image: radial-gradient(circle, #1A1A1A 1px, transparent 1px);
+background-size: 18px 18px;
+opacity: 0.7;
+}
+
+.login-brand::after {
+content: "NOTHING";
+position: absolute;
+right: -36px;
+bottom: -26px;
+font-weight: 700;
+font-size: 170px;
+letter-spacing: -0.08em;
+color: rgba(255,255,255,0.025);
+user-select: none;
+pointer-events: none;
+}
+
+.brand-top, .login-footer {
+position: relative;
+z-index: 1;
+}
+
+.nothing-wordmark {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 40px;
+text-transform: uppercase;
+letter-spacing: 0.18em;
+font-size: 12px;
+font-weight: 600;
+}
+
+.nothing-dot {
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background: var(--red);
+display: inline-block;
+animation: pulseDot 2.0s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+0%, 100% { transform: scale(1); opacity: 1; }
+50% { transform: scale(0.8); opacity: 0.5; }
+}
+
+.login-headline {
+font-size: clamp(36px, 4.6vw, 72px);
+line-height: 1.02;
+letter-spacing: -0.05em;
+font-weight: 700;
+margin: 0;
+}
+
+.login-headline em {
+font-style: normal;
+color: var(--muted);
+}
+
+.login-tagline {
+margin-top: 22px;
+max-width: 500px;
+font-size: 14px;
+line-height: 1.7;
+color: var(--muted);
+}
+
+.login-footer {
+font-size: 11px;
+color: var(--muted-2);
+letter-spacing: 0.08em;
+font-family: var(--font-mono);
+}
+
+.login-form-panel {
+width: 430px;
+flex-shrink: 0;
+background: var(--surface-1);
+padding: 56px 42px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+}
+
+.form-eyebrow {
+font-size: 11px;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(--muted);
+margin-bottom: 28px;
+}
+
+.form-title {
+font-size: 30px;
+line-height: 1.12;
+margin: 0 0 34px 0;
+letter-spacing: -0.03em;
+}
+
+.field-group {
+margin-bottom: 18px;
+}
+
+.field-label {
+display: block;
+margin-bottom: 8px;
+font-size: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(--muted);
+}
+
+.field-input {
+width: 100%;
+background: var(--surface-2);
+border: 1px solid var(--border);
+color: var(--white);
+padding: 14px 16px;
+font-size: 14px;
+font-family: var(--font-ui);
+outline: none;
+}
+
+.field-input::placeholder {
+color: var(--muted-2);
+}
+
+.field-input:focus {
+border-color: var(--white);
+}
+
+.login-btn {
+width: 100%;
+margin-top: 30px;
+padding: 16px 18px;
+border: none;
+background: var(--white);
+color: var(--black);
+font-weight: 700;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+cursor: pointer;
+transition: all 0.12s ease;
+}
+
+.login-btn:hover {
+background: var(--red);
+color: var(--white);
+}
+
+#login-msg {
+min-height: 18px;
+margin-top: 18px;
+font-family: var(--font-mono);
+font-size: 12px;
+color: var(--muted);
+}
+
+#login-msg.error {
+color: var(--red);
+}
+
+#login-msg.success {
+color: var(--green);
+}
+
+#debug-log {
+margin-top: 8px;
+font-size: 11px;
+color: var(--red);
+white-space: pre-wrap;
+font-family: var(--font-mono);
+}
+
+#app-container {
+display: none;
+width: 100%;
+height: 100%;
+flex-direction: row;
+}
+
+#sidebar {
+width: var(--sidebar-w);
+background: var(--surface-1);
+border-right: 1px solid var(--border);
+display: flex;
+flex-direction: column;
+height: 100%;
+}
+
+.sidebar-brand {
+padding: 22px 18px;
+border-bottom: 1px solid var(--border);
+display: flex;
+align-items: center;
+gap: 10px;
+flex-shrink: 0;
+}
+
+.sidebar-brand-text {
+text-transform: uppercase;
+letter-spacing: 0.16em;
+font-size: 11px;
+font-weight: 700;
+}
+
+.tab-nav {
+overflow-y: auto;
+padding: 12px 0;
+flex: 1;
+}
+
+.tab-btn {
+display: flex;
+align-items: center;
+padding: 12px 18px;
+width: 100%;
+border: none;
+border-left: 2px solid transparent;
+background: transparent;
+color: var(--muted);
+text-align: left;
+cursor: pointer;
+font-size: 13px;
+font-weight: 500;
+font-family: var(--font-ui);
+transition: all 0.12s ease;
+}
+
+.tab-btn:hover {
+background: rgba(255,255,255,0.04);
+color: var(--white);
+}
+
+.tab-btn.active {
+background: rgba(255,255,255,0.05);
+border-left-color: var(--red);
+color: var(--white);
+font-weight: 600;
+}
+
+#content {
+flex: 1;
+height: 100%;
+overflow-y: auto;
+padding: 32px 28px;
+background: var(--black);
+}
+
+.tab-content {
+display: none;
+}
+
+.tab-content.active {
+display: block;
+animation: fadeIn 0.18s ease;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+
+.page-header {
+display: flex;
+align-items: flex-start;
+justify-content: space-between;
+gap: 12px;
+margin-bottom: 22px;
+padding-bottom: 18px;
+border-bottom: 1px solid var(--border);
+}
+
+.page-title {
+font-size: 22px;
+letter-spacing: -0.03em;
+margin: 0;
+}
+
+.page-subtitle {
+color: var(--muted);
+margin-top: 5px;
+font-size: 13px;
+}
+
+.panel {
+background: var(--surface-1);
+border: 1px solid var(--border);
+padding: 20px;
+position: relative;
+}
+
+.panel-corners::before,
+.panel-corners::after {
+content: "";
+position: absolute;
+width: 12px;
+height: 12px;
+}
+
+.panel-corners::before {
+top: -1px;
+left: -1px;
+border-top: 2px solid var(--red);
+border-left: 2px solid var(--red);
+}
+
+.panel-corners::after {
+bottom: -1px;
+right: -1px;
+border-bottom: 2px solid var(--red);
+border-right: 2px solid var(--red);
+}
+
+.control-row {
+display: flex;
+align-items: flex-end;
+gap: 18px;
+flex-wrap: wrap;
+background: var(--surface-1);
+border: 1px solid var(--border);
+padding: 18px 20px;
+margin-bottom: 22px;
+position: relative;
+}
+
+.control-group {
+display: flex;
+flex-direction: column;
+gap: 6px;
+}
+
+.control-label {
+font-size: 10px;
+color: var(--muted);
+letter-spacing: 0.12em;
+text-transform: uppercase;
+}
+
+select, input[type="text"], textarea {
+background: var(--surface-2);
+color: var(--white);
+border: 1px solid var(--border);
+font-family: var(--font-ui);
+padding: 10px 12px;
+font-size: 13px;
+outline: none;
+}
+
+select:focus, input[type="text"]:focus, textarea:focus {
+border-color: var(--white);
+}
+
+.btn {
+padding: 10px 16px;
+border: none;
+cursor: pointer;
+font-family: var(--font-ui);
+font-weight: 600;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+font-size: 11px;
+transition: all 0.12s ease;
+}
+
+.btn-primary {
+background: var(--white);
+color: var(--black);
+}
+
+.btn-primary:hover {
+background: var(--red);
+color: var(--white);
+}
+
+.btn-outline {
+background: transparent;
+color: var(--muted);
+border: 1px solid var(--border);
+}
+
+.btn-outline:hover {
+border-color: var(--white);
+color: var(--white);
+}
+
+.btn-danger {
+background: var(--red);
+color: var(--white);
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+}
+
+th, td {
+border-bottom: 1px solid var(--border);
+padding: 10px 12px;
+text-align: left;
+vertical-align: top;
+}
+
+th {
+background: var(--surface-2);
+color: var(--muted);
+font-size: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+}
+
+td {
+color: var(--white);
+font-size: 12px;
+}
+
+.mono {
+font-family: var(--font-mono);
+}
+
+.audit-row-status {
+display: flex;
+gap: 6px;
+flex-wrap: wrap;
+}
+
+.status-btn {
+flex: 1;
+min-width: 72px;
+padding: 8px 6px;
+font-size: 11px;
+border: 1px solid var(--border);
+background: transparent;
+color: var(--muted);
+cursor: pointer;
+font-family: var(--font-ui);
+font-weight: 600;
+}
+
+.status-btn.selected-ok {
+background: rgba(34,197,94,0.15);
+border-color: var(--green);
+color: var(--green);
+}
+
+.status-btn.selected-nc {
+background: rgba(234,21,21,0.15);
+border-color: var(--red);
+color: var(--red);
+}
+
+.status-btn.selected-na {
+background: rgba(255,255,255,0.06);
+border-color: var(--muted);
+color: var(--muted);
+}
+
+.photo-preview {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+margin-top: 8px;
+}
+
+.photo-preview img {
+width: 64px;
+height: 64px;
+object-fit: cover;
+border: 1px solid var(--border);
+background: #111;
+}
+
+.evidence-input {
+width: 100%;
+min-width: 180px;
+padding: 8px 10px;
+background: var(--surface-2);
+border: 1px solid var(--border);
+color: var(--white);
+font-size: 12px;
+font-family: var(--font-ui);
+}
+
+.report-box {
+display: none;
+margin-top: 18px;
+background: #ffffff;
+color: #111111;
+border: 1px solid var(--border);
+padding: 24px;
+font-family: var(--font-ui);
+}
+
+.report-box.visible {
+display: block;
+}
+
+.image-grid {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-top: 8px;
+}
+
+.image-grid img {
+width: 90px;
+height: 90px;
+object-fit: cover;
+border: 1px solid #d8d8d8;
+background: #f5f5f5;
+}
+
+@media (max-width: 768px) {
+#login-screen {
+flex-direction: column;
+}
+
+.login-brand {
+padding: 26px 20px;
+min-height: 240px;
+border-right: none;
+border-bottom: 1px solid var(--border);
+}
+
+.login-brand::after {
+font-size: 90px;
+right: 0;
+bottom: -8px;
+}
+
+.login-form-panel {
+width: 100%;
+padding: 28px 20px;
+}
+
+#app-container {
+flex-direction: column;
+}
+
+#sidebar {
+width: 100%;
+height: auto;
+border-right: none;
+border-bottom: 1px solid var(--border);
+}
+
+.tab-nav {
+display: flex;
+overflow-x: auto;
+white-space: nowrap;
+}
+
+.tab-btn {
+flex-shrink: 0;
+width: auto;
+}
+
+#content {
+padding: 18px 14px;
+}
+
+.page-header {
+flex-direction: column;
+}
+
+.control-row {
+flex-direction: column;
+align-items: stretch;
+}
+
+.control-group {
+width: 100%;
+}
+
+select, input[type="text"], textarea {
+width: 100%;
+}
+
+table {
+min-width: 1100px;
+}
+
+.table-wrap {
+overflow-x: auto;
+}
+}
+</style>
+</head>
+<body>
+<div class="watermark">JF1 QUALITY — AUDIT OS</div>
+
+<div id="login-screen">
+<div class="login-brand">
+<div class="brand-top">
+<div class="nothing-wordmark">
+<span class="nothing-dot"></span>
+<span>Nothing Technology</span>
+</div>
+
+<h1 class="login-headline">
+A.R.T.H.U.R.<br>
+<em>[ Automated Risk Tracking ]</em><br>
+&amp; Heuristic Review
+</h1>
+
+<p class="login-tagline">
+Predictive quality assurance for Nothing's service network.
+Rule-based risk analysis with zero external dependency.
+</p>
+</div>
+
+<div class="login-footer">
+BUILD 2026 / JF1 QUALITY TEAM / V3.0
+</div>
+</div>
+
+<div class="login-form-panel">
+<p class="form-eyebrow">Secure Access</p>
+<h2 class="form-title">Sign in to<br>Audit OS</h2>
+
+<div class="field-group">
+<label class="field-label" for="loginId">Inspector ID</label>
+<input class="field-input" type="text" id="loginId" placeholder="Enter your ID" autocomplete="off">
+</div>
+
+<div class="field-group">
+<label class="field-label" for="password">Password</label>
+<input class="field-input" type="password" id="password" placeholder="Enter password" onkeydown="if(event.key==='Enter') attemptLogin()">
+</div>
+
+<button class="login-btn" onclick="attemptLogin()">Enter System</button>
+<p id="login-msg"></p>
+<div id="debug-log"></div>
+</div>
+</div>
+
+<div id="app-container">
+<aside id="sidebar">
+<div class="sidebar-brand">
+<span class="nothing-dot"></span>
+<span class="sidebar-brand-text">ERP OS</span>
+</div>
+
+<nav class="tab-nav">
+<button class="tab-btn active" onclick="switchTab(event,'tab6')">Predictive NCs</button>
+<button class="tab-btn" onclick="switchTab(event,'tab1')">Audit Matrix</button>
+<button class="tab-btn" onclick="switchTab(event,'tab2')">Evidence</button>
+<button class="tab-btn" onclick="switchTab(event,'tab7')">Report Dispatch</button>
+<button class="tab-btn" onclick="switchTab(event,'tab17')">Full Audit Report</button>
+</nav>
+</aside>
+
+<main id="content">
+<div id="tab6" class="tab-content active">
+<div class="page-header">
+<div>
+<h2 class="page-title">Predictive Risk Engine</h2>
+<p class="page-subtitle">Analyse historical NC patterns for the selected site.</p>
+</div>
+</div>
+
+<div class="control-row panel-corners">
+<div class="control-group">
+<span class="control-label">SC Code</span>
+<select id="ai-sc-code"></select>
+</div>
+
+<div class="control-group">
+<span class="control-label">SC Name</span>
+<select id="ai-sc-name" style="min-width:220px;"></select>
+</div>
+
+<div class="control-group">
+<span class="control-label">Timeframe</span>
+<select id="ai-timeframe">
+<option value="3">Past 90 days</option>
+<option value="6">Past 180 days</option>
+<option value="12">Past 365 days</option>
+<option value="all" selected>All records</option>
+</select>
+</div>
+
+<div class="control-group">
+<span class="control-label">&nbsp;</span>
+<button class="btn btn-primary" onclick="generatePredictiveNCs()">Run Analysis</button>
+</div>
+</div>
+
+<div id="ai-response-box" class="panel" style="display:none;"></div>
+</div>
+
+<div id="tab1" class="tab-content">
+<div class="page-header">
+<div>
+<h2 class="page-title">Audit Matrix</h2>
+<p class="page-subtitle">Score each checkpoint and attach live evidence.</p>
+</div>
+
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+<span style="font-size:12px;color:var(--muted);font-family:var(--font-mono);">SCORE:</span>
+<span id="live-score-pct" style="font-family:var(--font-mono);font-size:18px;color:var(--muted);">—</span>
+<input type="text" id="current-sc-code" readonly placeholder="SC Code" style="width:130px;opacity:0.7;">
+<input type="text" id="current-sc-name" readonly placeholder="SC Name" style="width:180px;opacity:0.7;">
+</div>
+</div>
+
+<div class="panel" style="margin-bottom:18px;">
+<div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+<span style="font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;">Completion</span>
+<span id="completion-text" style="font-size:10px;color:var(--muted);font-family:var(--font-mono);">0 / 0 answered</span>
+</div>
+<div style="height:4px;background:var(--surface-3);width:100%;">
+<div id="completion-bar" style="height:100%;width:0%;background:var(--red);transition:all 0.2s ease;"></div>
+</div>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Category</th>
+<th>Checkpoint</th>
+<th>Max</th>
+<th style="min-width:200px;">Status</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody id="audit-body">
+<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--muted);">Loading audit matrix…</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="tab2" class="tab-content">
+<div class="page-header">
+<div>
+<h2 class="page-title">Evidence Collection</h2>
+<p class="page-subtitle">Attach evidence and remarks for each NC.</p>
+</div>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Checkpoint</th>
+<th>Evidence</th>
+<th>Inspector Remarks</th>
+<th>Live Photo</th>
+</tr>
+</thead>
+<tbody id="evidence-body">
+<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--muted);">No NCs flagged yet.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="tab7" class="tab-content">
+<div class="page-header">
+<div>
+<h2 class="page-title">Report Dispatch</h2>
+<p class="page-subtitle">Final audit review and report generation.</p>
+</div>
+</div>
+
+<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+<button class="btn btn-primary" onclick="generateFinalReport()">Validate &amp; Generate</button>
+<button class="btn btn-danger" id="dispatch-btn" style="display:none;" onclick="dispatchFinalReport()">Transmit Report</button>
+</div>
+
+<div id="report-extra-fields" style="display:none;margin-bottom:20px;">
+<div class="control-row">
+<div class="control-group" style="flex:1;min-width:260px;">
+<span class="control-label">Audit Highlights</span>
+<textarea id="audit-highlights" rows="4" placeholder="Key highlights from the audit..."></textarea>
+</div>
+
+<div class="control-group" style="flex:1;min-width:260px;">
+<span class="control-label">RCA &amp; Corrective Action</span>
+<textarea id="audit-rca" rows="4" placeholder="Root cause and corrective action..."></textarea>
+</div>
+</div>
+</div>
+
+<div id="report-validation-msg"></div>
+<div id="final-report-container" class="report-box"></div>
+</div>
+
+<div id="tab17" class="tab-content">
+<div class="page-header">
+<div>
+<h2 class="page-title">Full Audit Report Console</h2>
+<p class="page-subtitle">View complete audit records with evidence images.</p>
+</div>
+</div>
+
+<div class="control-row panel-corners">
+<div class="control-group">
+<span class="control-label">Region</span>
+<select id="admin-report-region">
+<option value="ALL">All Regions</option>
+</select>
+</div>
+
+<div class="control-group">
+<span class="control-label">Month</span>
+<select id="admin-report-month">
+<option value="ALL">All Months</option>
+</select>
+</div>
+
+<div class="control-group">
+<span class="control-label">Search</span>
+<input type="text" id="admin-report-search" placeholder="SC name / code / auditor">
+</div>
+
+<div class="control-group">
+<span class="control-label">&nbsp;</span>
+<button class="btn btn-primary" onclick="loadAdminAuditConsole()">Load Reports</button>
+</div>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Auditor</th>
+<th>Site</th>
+<th>Code</th>
+<th>Region</th>
+<th>State</th>
+<th>City</th>
+<th>NC Count</th>
+<th>Score</th>
+<th>Highlights</th>
+<th>RCA</th>
+<th>Evidences</th>
+</tr>
+</thead>
+<tbody id="admin-report-body">
+<tr><td colspan="12" style="text-align:center;padding:30px;color:var(--muted);">Loading audit reports…</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+let currentUserRole = "";
+let globalAuditData = [];
+let historicalNCData = [];
+let globalMappingData = [];
+let currentAuditSummary = null;
+let reportImageMap = {};
+
+function setMsg(text, type) {
+const el = document.getElementById("login-msg");
+el.textContent = text;
+el.className = type || "";
+}
+
+function transitionToApp() {
+document.getElementById("login-screen").style.display = "none";
+document.getElementById("app-container").style.display = "flex";
+initializeApp();
+}
+
+function initializeApp() {
+loadAllData();
+populateAdminReportFilters();
+loadSitesForTab6();
+}
+
+function attemptLogin() {
+const loginId = document.getElementById("loginId").value.trim();
+const password = document.getElementById("password").value;
+
+if (!loginId || !password) {
+setMsg("ID and password required.", "error");
+return;
+}
+
+setMsg("Authenticating...", "success");
+
+google.script.run
+.withSuccessHandler(function(res) {
+if (!res || !res.success) {
+setMsg(res && res.message ? res.message : "Incorrect User ID or Password.", "error");
+return;
+}
+
+currentUserRole = res.role || "employee";
+setMsg("Login successful.", "success");
+setTimeout(function() {
+transitionToApp();
+}, 400);
+})
+.withFailureHandler(function(err) {
+setMsg("Login failed. Please try again.", "error");
+document.getElementById("debug-log").innerText = err && err.message ? err.message : String(err);
+})
+.verifyLogin(loginId, password);
+}
+
+function switchTab(event, tabId) {
+document.querySelectorAll(".tab-content").forEach(function(el) {
+el.classList.remove("active");
+});
+
+document.querySelectorAll(".tab-btn").forEach(function(el) {
+el.classList.remove("active");
+});
+
+document.getElementById(tabId).classList.add("active");
+if (event && event.currentTarget) {
+event.currentTarget.classList.add("active");
+}
+
+if (tabId === "tab17") {
+populateAdminReportFilters();
+loadAdminAuditConsole();
+}
+}
+
+function loadAllData() {
+google.script.run
+.withSuccessHandler(function(data) {
+globalAuditData = Array.isArray(data) ? data : [];
+renderAuditMatrix();
+renderEvidenceTable();
+updateLiveScore();
+})
+.withFailureHandler(function(err) {
+console.log(err);
+})
+.getAuditData();
+
+google.script.run
+.withSuccessHandler(function(data) {
+historicalNCData = Array.isArray(data) ? data : [];
+})
+.withFailureHandler(function(err) {
+console.log(err);
+})
+.getHistoricalNCData();
+
+google.script.run
+.withSuccessHandler(function(data) {
+globalMappingData = Array.isArray(data) ? data : [];
+loadSitesForTab6();
+})
+.withFailureHandler(function(err) {
+console.log(err);
+})
+.getMappingData();
+}
+
+function loadSitesForTab6() {
+const codeSelect = document.getElementById("ai-sc-code");
+const nameSelect = document.getElementById("ai-sc-name");
+
+if (!codeSelect || !nameSelect) return;
+
+codeSelect.innerHTML = '<option value="">Select code</option>';
+nameSelect.innerHTML = '<option value="">Select site</option>';
+
+const codes = [];
+const names = [];
+
+globalMappingData.forEach(function(item) {
+if (item && item.scCode && item.scCode !== "N/A") codes.push(item.scCode);
+if (item && item.svcName) names.push(item.svcName);
+});
+
+Array.from(new Set(codes)).sort().forEach(function(code) {
+const opt = document.createElement("option");
+opt.value = code;
+opt.textContent = code;
+codeSelect.appendChild(opt);
+});
+
+Array.from(new Set(names)).sort().forEach(function(name) {
+const opt = document.createElement("option");
+opt.value = name;
+opt.textContent = name;
+nameSelect.appendChild(opt);
+});
+}
+
+function syncAiSc(type) {
+const codeSelect = document.getElementById("ai-sc-code");
+const nameSelect = document.getElementById("ai-sc-name");
+
+if (!codeSelect || !nameSelect) return;
+
+if (type === "code" && codeSelect.value) {
+const match = globalMappingData.find(function(row) {
+return row && row.scCode === codeSelect.value;
+});
+
+if (match && match.svcName) {
+nameSelect.value = match.svcName;
+}
+} else if (type === "name" && nameSelect.value) {
+const match = globalMappingData.find(function(row) {
+return row && row.svcName === nameSelect.value;
+});
+
+if (match && match.scCode) {
+codeSelect.value = match.scCode;
+}
+}
+
+const selectedCode = codeSelect.value || "";
+const selectedName = nameSelect.value || "";
+
+document.getElementById("current-sc-code").value = selectedCode;
+document.getElementById("current-sc-name").value = selectedName;
+}
+
+function renderAuditMatrix() {
+const tbody = document.getElementById("audit-body");
+if (!tbody) return;
+
+if (!globalAuditData.length) {
+tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--muted);">No checklist data found.</td></tr>';
+return;
+}
+
+tbody.innerHTML = "";
+
+globalAuditData.forEach(function(row) {
+const tr = document.createElement("tr");
+tr.innerHTML = `
+<td class="mono">${row.id}</td>
+<td style="color:var(--muted);">${row.category || ""}</td>
+<td>${row.checkpoint || ""}</td>
+<td class="mono">${row.maxMarks || 0}</td>
+<td>
+<div class="audit-row-status">
+<button class="status-btn" data-id="${row.id}" data-value="Compliance" onclick="setStatus(${row.id}, 'Compliance')">✓ OK</button>
+<button class="status-btn" data-id="${row.id}" data-value="NC" onclick="setStatus(${row.id}, 'NC')">✗ NC</button>
+<button class="status-btn" data-id="${row.id}" data-value="Not applicable" onclick="setStatus(${row.id}, 'Not applicable')">N/A</button>
+</div>
+</td>
+<td class="mono" id="score-${row.id}" style="color:var(--muted);">—</td>
+`;
+tbody.appendChild(tr);
+});
+}
+
+function setStatus(id, value) {
+const buttons = document.querySelectorAll(".status-btn[data-id='" + id + "']");
+buttons.forEach(function(btn) {
+btn.classList.remove("selected-ok", "selected-nc", "selected-na");
+if (btn.dataset.value === value) {
+if (value === "Compliance") btn.classList.add("selected-ok");
+if (value === "NC") btn.classList.add("selected-nc");
+if (value === "Not applicable") btn.classList.add("selected-na");
+}
+});
+
+const scoreEl = document.getElementById("score-" + id);
+const maxEl = document.querySelectorAll("tr").length > 0 ? null : null;
+
+if (scoreEl) {
+if (value === "Compliance") {
+scoreEl.textContent = getMaxMarkForRow(id);
+scoreEl.style.color = "var(--green)";
+} else if (value === "NC") {
+scoreEl.textContent = "0";
+scoreEl.style.color = "var(--red)";
+} else if (value === "Not applicable") {
+scoreEl.textContent = "N/A";
+scoreEl.style.color = "var(--muted)";
+} else {
+scoreEl.textContent = "—";
+scoreEl.style.color = "var(--muted)";
+}
+}
+
+updateLiveScore();
+}
+
+function getMaxMarkForRow(id) {
+const row = globalAuditData.find(function(item) {
+return item.id === id;
+});
+
+if (!row) return "0";
+return row.maxMarks || "0";
+}
+
+function updateLiveScore() {
+let answered = 0;
+let total = 0;
+let totalMax = 0;
+let totalScore = 0;
+
+globalAuditData.forEach(function(row) {
+total++;
+const buttons = document.querySelectorAll(".status-btn[data-id='" + row.id + "']");
+let selectedValue = "";
+buttons.forEach(function(btn) {
+if (btn.classList.contains("selected-ok") || btn.classList.contains("selected-nc") || btn.classList.contains("selected-na")) {
+selectedValue = btn.dataset.value;
+}
+});
+
+if (!selectedValue) return;
+
+answered++;
+
+const max = Number(row.maxMarks || 0);
+totalMax += max;
+
+if (selectedValue === "Compliance") {
+totalScore += max;
+}
+});
+
+const scoreEl = document.getElementById("live-score-pct");
+const completion = document.getElementById("completion-bar");
+const completionText = document.getElementById("completion-text");
+
+const percent = totalMax > 0 ? ((totalScore / totalMax) * 100).toFixed(1) : "0.0";
+const donePercent = total > 0 ? ((answered / total) * 100).toFixed(1) : "0.0";
+
+if (scoreEl) {
+scoreEl.textContent = totalMax > 0 ? percent + "%" : "—";
+scoreEl.style.color = Number(percent) >= 90 ? "var(--green)" : Number(percent) >= 85 ? "var(--amber)" : "var(--red)";
+}
+
+if (completion) {
+completion.style.width = donePercent + "%";
+}
+
+if (completionText) {
+completionText.textContent = answered + " / " + total + " answered";
+}
+}
+
+function renderEvidenceTable() {
+const tbody = document.getElementById("evidence-body");
+if (!tbody) return;
+
+const ncRows = globalAuditData.filter(function(row) {
+return row && row.id;
+});
+
+if (!ncRows.length) {
+tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--muted);">No data to display.</td></tr>';
+return;
+}
+
+tbody.innerHTML = "";
+
+ncRows.forEach(function(row) {
+const tr = document.createElement("tr");
+tr.innerHTML = `
+<td class="mono">${row.id}</td>
+<td>${row.checkpoint || ""}</td>
+<td>
+<input class="evidence-input" type="text" id="evidence-${row.id}" placeholder="Paste evidence URL or note">
+</td>
+<td>
+<input class="evidence-input" type="text" id="remark-${row.id}" placeholder="Inspector remarks">
+</td>
+<td>
+<input type="file" id="photo-${row.id}" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoCapture(${row.id}, this)">
+<button class="btn btn-outline" type="button" onclick="document.getElementById('photo-${row.id}').click()">Add Photo</button>
+<div id="photo-preview-${row.id}" class="photo-preview"></div>
+</td>
+`;
+tbody.appendChild(tr);
+});
+}
+
+function handlePhotoCapture(id, input) {
+const file = input.files && input.files[0];
+if (!file) return;
+
+const reader = new FileReader();
+reader.onload = function(e) {
+const previewContainer = document.getElementById("photo-preview-" + id);
+if (!previewContainer) return;
+
+const img = document.createElement("img");
+img.src = e.target.result;
+img.alt = "Evidence";
+previewContainer.appendChild(img);
+
+if (!reportImageMap[id]) reportImageMap[id] = [];
+reportImageMap[id].push(e.target.result);
+};
+
+reader.readAsDataURL(file);
+}
+
+function generatePredictiveNCs() {
+const code = document.getElementById("ai-sc-code").value;
+const name = document.getElementById("ai-sc-name").value || "Site";
+const timeframe = document.getElementById("ai-timeframe").value || "all";
+const box = document.getElementById("ai-response-box");
+
+if (!code) {
+box.style.display = "block";
+box.innerHTML = "<strong style='color:var(--red);'>Please select an SC code first.</strong>";
+return;
+}
+
+box.style.display = "block";
+box.innerHTML = "<div style='color:var(--muted);font-family:var(--font-mono);font-size:12px;'>Analysing data…</div>";
+
+google.script.run
+.withSuccessHandler(function(html) {
+box.innerHTML = html;
+})
+.withFailureHandler(function(err) {
+box.innerHTML = "<strong style='color:var(--red);'>Error:</strong> " + (err.message || err);
+})
+.runLocalPredictiveEngine({
+scCode: code,
+scName: name,
+historicalNCs: historicalNCData.filter(function(item) {
+return item && item.scCode && String(item.scCode).toUpperCase() === String(code).toUpperCase();
+}),
+timeframe: timeframe
+});
+}
+
+function generateFinalReport() {
+const scCode = document.getElementById("current-sc-code").value.trim();
+const scName = document.getElementById("current-sc-name").value.trim();
+const container = document.getElementById("final-report-container");
+const msg = document.getElementById("report-validation-msg");
+const dispatchBtn = document.getElementById("dispatch-btn");
+
+msg.innerHTML = "";
+container.classList.remove("visible");
+dispatchBtn.style.display = "none";
+
+if (!scCode || !scName) {
+msg.innerHTML = "<span style='color:var(--red);'>Select a site first from the Predictive NCs tab.</span>";
+return;
+}
+
+let ncList = [];
+let totalMax = 0;
+let totalScore = 0;
+
+globalAuditData.forEach(function(row) {
+const selected = document.querySelectorAll(".status-btn[data-id='" + row.id + "']");
+let status = "";
+selected.forEach(function(btn) {
+if (btn.classList.contains("selected-ok") || btn.classList.contains("selected-nc") || btn.classList.contains("selected-na")) {
+status = btn.dataset.value;
+}
+});
+
+if (!status) {
+return;
+}
+
+if (status !== "Not applicable") {
+totalMax += Number(row.maxMarks || 0);
+}
+
+if (status === "Compliance") {
+totalScore += Number(row.maxMarks || 0);
+}
+
+if (status === "NC") {
+const evidence = document.getElementById("evidence-" + row.id);
+const remark = document.getElementById("remark-" + row.id);
+
+ncList.push({
+id: row.id,
+checkpoint: row.checkpoint || "",
+evidence: evidence ? evidence.value : "",
+remark: remark ? remark.value : "",
+evidenceImages: reportImageMap[row.id] || []
+});
+}
+});
+
+if (!ncList.length) {
+msg.innerHTML = "<span style='color:var(--amber);'>No NCs found. Please mark at least one checkpoint as NC before generating the report.</span>";
+return;
+}
+
+const percentage = totalMax > 0 ? ((totalScore / totalMax) * 100).toFixed(1) : "0.0";
+
+currentAuditSummary = {
+auditDate: new Date().toLocaleDateString("en-GB"),
+auditorId: document.getElementById("loginId").value || "Unknown",
+scName: scName,
+scCode: scCode,
+totalScore: totalScore,
+maxScore: totalMax,
+percentage: percentage,
+ncCount: ncList.length,
+ncList: ncList
+};
+
+let html = `
+<div style="font-family: 'Space Grotesk', sans-serif; color: #111;">
+<h2 style="margin-bottom:8px;font-size:24px;letter-spacing:-0.03em;">Final Audit Report</h2>
+<p style="margin:0 0 18px 0;font-size:13px;color:#666;">${scName} (${scCode}) • ${new Date().toDateString()}</p>
+
+<div style="background:#f8f8f8;padding:18px 20px;border-left:4px solid #EA1515;margin-bottom:22px;">
+<div style="font-size:11px;color:#666;letter-spacing:0.1em;text-transform:uppercase;">Overall Score</div>
+<div style="font-size:34px;font-weight:700;font-family:'JetBrains Mono', monospace;color:#EA1515;">${percentage}%</div>
+<div style="font-size:13px;color:#444;">${totalScore} / ${totalMax} marks</div>
+</div>
+
+<h3 style="margin:0 0 12px 0;font-size:16px;text-transform:uppercase;letter-spacing:0.08em;color:#111;">Non-Compliances (${ncList.length})</h3>
+
+<table style="width:100%;border-collapse:collapse;font-size:13px;">
+<thead>
+<tr style="background:#f2f2f2;">
+<th style="padding:8px 10px;border:1px solid #ddd;text-align:left;">#</th>
+<th style="padding:8px 10px;border:1px solid #ddd;text-align:left;">Checkpoint</th>
+<th style="padding:8px 10px;border:1px solid #ddd;text-align:left;">Remarks</th>
+<th style="padding:8px 10px;border:1px solid #ddd;text-align:left;">Evidence</th>
+<th style="padding:8px 10px;border:1px solid #ddd;text-align:left;">Images</th>
+</tr>
+</thead>
+<tbody>
+`;
+
+ncList.forEach(function(nc) {
+const imageHtml = (nc.evidenceImages && nc.evidenceImages.length)
+? nc.evidenceImages.map(function(img) {
+return '<img src="' + img + '" style="width:72px;height:72px;object-fit:cover;border:1px solid #ddd;margin:4px;background:#f5f5f5;" />';
+}).join("")
+: "<span style='color:#777;'>No image</span>";
+
+const evidenceLink = nc.evidence ? '<a href="' + nc.evidence + '" target="_blank" style="color:#EA1515;font-weight:600;">Open</a>' : "—";
+
+html += `
+<tr>
+<td style="padding:8px 10px;border:1px solid #ddd;">${nc.id}</td>
+<td style="padding:8px 10px;border:1px solid #ddd;">${nc.checkpoint}</td>
+<td style="padding:8px 10px;border:1px solid #ddd;">${nc.remark || "N/A"}</td>
+<td style="padding:8px 10px;border:1px solid #ddd;">${evidenceLink}</td>
+<td style="padding:8px 10px;border:1px solid #ddd;"><div style="display:flex;flex-wrap:wrap;gap:6px;">${imageHtml}</div></td>
+</tr>
+`;
+});
+
+html += "</tbody></table></div>";
+
+container.innerHTML = html;
+container.classList.add("visible");
+document.getElementById("report-extra-fields").style.display = "block";
+dispatchBtn.style.display = "inline-block";
+msg.innerHTML = "<span style='color:var(--green);'>Report generated successfully.</span>";
+}
+
+function dispatchFinalReport() {
+const scCode = document.getElementById("current-sc-code").value.trim();
+const scName = document.getElementById("current-sc-name").value.trim();
+const msg = document.getElementById("report-validation-msg");
+
+if (!currentAuditSummary) {
+msg.innerHTML = "<span style='color:var(--red);'>Generate report first.</span>";
+return;
+}
+
+const payload = {
+auditDate: new Date().toLocaleDateString("en-GB"),
+auditorId: document.getElementById("loginId").value || "Unknown",
+scName: scName,
+scCode: scCode,
+region: "Unknown",
+state: "Unknown",
+city: "Unknown",
+highlights: document.getElementById("audit-highlights").value || "No highlights recorded.",
+rca: document.getElementById("audit-rca").value || "No RCA recorded.",
+totalScore: currentAuditSummary.totalScore,
+maxScore: currentAuditSummary.maxScore,
+percentage: currentAuditSummary.percentage,
+ncCount: currentAuditSummary.ncCount,
+ncList: currentAuditSummary.ncList
+};
+
+msg.innerHTML = "<span style='color:var(--muted);font-family:var(--font-mono);font-size:12px;'>Saving audit and transmitting report…</span>";
+
+google.script.run
+.withSuccessHandler(function(saveRes) {
+if (!saveRes || !saveRes.success) {
+msg.innerHTML = "<span style='color:var(--red);'>Save failed: " + (saveRes && saveRes.message ? saveRes.message : "Unknown") + "</span>";
+return;
+}
+
+google.script.run
+.withSuccessHandler(function(emailRes) {
+if (emailRes && emailRes.success) {
+msg.innerHTML = "<span style='color:var(--green);'>Audit saved and report sent successfully.</span>";
+} else {
+msg.innerHTML = "<span style='color:var(--red);'>Saved, but email failed: " + (emailRes && emailRes.message ? emailRes.message : "Unknown") + "</span>";
+}
+})
+.withFailureHandler(function(err) {
+msg.innerHTML = "<span style='color:var(--red);'>Email send error: " + (err.message || err) + "</span>";
+})
+.sendFinalAuditReport(scCode, scName, ["admin@nothing.com"], document.getElementById("final-report-container").innerHTML);
+
+})
+.withFailureHandler(function(err) {
+msg.innerHTML = "<span style='color:var(--red);'>DB save error: " + (err.message || err) + "</span>";
+})
+.saveAuditData(payload);
+}
+
+function populateAdminReportFilters() {
+const regionEl = document.getElementById("admin-report-region");
+const monthEl = document.getElementById("admin-report-month");
+
+if (!regionEl || !monthEl) return;
+
+const regions = [];
+historicalNCData.forEach(function(item) {
+if (item && item.region) regions.push(item.region);
+});
+
+const uniqueRegions = Array.from(new Set(regions)).sort();
+regionEl.innerHTML = '<option value="ALL">All Regions</option>';
+uniqueRegions.forEach(function(region) {
+const opt = document.createElement("option");
+opt.value = region;
+opt.textContent = region;
+regionEl.appendChild(opt);
+});
+
+const monthMap = {};
+historicalNCData.forEach(function(item) {
+if (!item || !item.auditDate) return;
+
+const d = parseDate(item.auditDate);
+if (!d) return;
+
+const key = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+monthMap[key] = d.toLocaleString("en-US", { month: "short", year: "numeric" });
+});
+
+monthEl.innerHTML = '<option value="ALL">All Months</option>';
+Object.keys(monthMap).sort().reverse().forEach(function(key) {
+const opt = document.createElement("option");
+opt.value = key;
+opt.textContent = monthMap[key];
+monthEl.appendChild(opt);
+});
+}
+
+function loadAdminAuditConsole() {
+const region = document.getElementById("admin-report-region").value || "ALL";
+const month = document.getElementById("admin-report-month").value || "ALL";
+const search = (document.getElementById("admin-report-search").value || "").trim().toLowerCase();
+
+google.script.run
+.withSuccessHandler(function(rows) {
+renderAdminReport(rows, region, month, search);
+})
+.withFailureHandler(function(err) {
+document.getElementById("admin-report-body").innerHTML =
+<tr><td colspan="12" style="text-align:center;padding:30px;color:var(--red);">' + (err.message || err) + '</td></tr>';
+})
+.getAdminAuditConsoleData({
+region: region,
+month: month,
+search: search
+});
+}
+
+function renderAdminReport(rows, region, month, search) {
+const tbody = document.getElementById("admin-report-body");
+if (!tbody) return;
+
+let filtered = Array.isArray(rows) ? rows.slice() : [];
+
+if (region !== "ALL") {
+filtered = filtered.filter(function(item) {
+return (item.region || "").toLowerCase() === region.toLowerCase();
+});
+}
+
+if (month !== "ALL") {
+filtered = filtered.filter(function(item) {
+const d = parseDate(item.auditDate);
+if (!d) return false;
+const key = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+return key === month;
+});
+}
+
+if (search) {
+filtered = filtered.filter(function(item) {
+const text = (item.scName + " " + item.scCode + " " + item.auditorName + " " + item.region).toLowerCase();
+return text.indexOf(search) !== -1;
+});
+}
+
+if (!filtered.length) {
+tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;padding:30px;color:var(--muted);">No audit reports match your filters.</td></tr>';
+return;
+}
+
+tbody.innerHTML = "";
+
+filtered.forEach(function(item) {
+const score = Number(item.score || 0);
+const scoreColor = score >= 90 ? "var(--green)" : score >= 85 ? "var(--amber)" : "var(--red)";
+const imageHtml = (item.evidenceImages && item.evidenceImages.length)
+? item.evidenceImages.map(function(src) {
+return '<img src="' + src + '" style="width:60px;height:60px;object-fit:cover;border:1px solid #ddd;margin:2px;background:#f3f3f3;" />';
+}).join("")
+: "—";
+
+const tr = document.createElement("tr");
+tr.innerHTML = `
+<td class="mono" style="white-space:nowrap;">${item.auditDate || "—"}</td>
+<td>${item.auditorName || "—"}</td>
+<td>${item.scName || "—"}</td>
+<td class="mono">${item.scCode || "—"}</td>
+<td>${item.region || "—"}</td>
+<td>${item.state || "—"}</td>
+<td>${item.city || "—"}</td>
+<td class="mono" style="text-align:center;">${item.ncCount || 0}</td>
+<td class="mono" style="text-align:center;font-weight:700;color:${scoreColor};">${isNaN(score) ? "—" : score.toFixed(1) + "%"}</td>
+<td>${item.highlights || "—"}</td>
+<td>${item.rca || "—"}</td>
+<td>${imageHtml}</td>
+`;
+
+tbody.appendChild(tr);
+});
+}
+
+function parseDate(value) {
+if (!value) return null;
+
+const str = String(value).trim();
+const parts = str.split("-");
+
+if (parts.length === 3) {
+const day = Number(parts[0]);
+const monthNames = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+const monthName = parts[1].toLowerCase();
+const monthIndex = monthNames.indexOf(monthName.substring(0, 3));
+const year = Number(parts[2]);
+
+if (monthIndex !== -1 && !isNaN(day) && !isNaN(year)) {
+return new Date(year, monthIndex, day);
+}
+}
+
+const d = new Date(str);
+return isNaN(d.getTime()) ? null : d;
+}
+</script>
+</body>
+</html>
