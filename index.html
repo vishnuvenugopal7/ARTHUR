@@ -1559,7 +1559,7 @@ renderAdminReport(rows, region, month, search);
 })
 .withFailureHandler(function(err) {
 document.getElementById("admin-report-body").innerHTML =
-<tr><td colspan="12" style="text-align:center;padding:30px;color:var(--red);">' + (err.message || err) + '</td></tr>';
+<tr><td colspan="12" style="text-align:center;padding:30px;color:var(--red);"> + (err.message || err) + '</td></tr>';
 })
 .getAdminAuditConsoleData({
 region: region,
